@@ -7,7 +7,7 @@ const CatalogItem = ({game}) => {
                 <img src={game.imageUrl} />
                 <h6>{game.category}</h6>
                 <h2>{game.title}</h2>
-                <Link to='/catalog:id' className="details-button">Details</Link>
+                <Link to={`/catalog/${game._id}`} className="details-button">Details</Link>
             </div>
         </div>
     )
