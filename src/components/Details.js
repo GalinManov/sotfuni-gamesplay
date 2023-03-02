@@ -1,9 +1,31 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-const Details = ({games}) => {
+const Details = ({ games, addComment }) => {
+    const [comment, setComment] = useState({
+        username: '',
+        comment: ''
+    })
+
     const { gameId } = useParams();
 
     const game = games.find(x => x._id == gameId);
+
+    function submitHandler(e) {
+        e.preventDefault();
+
+        addComment(gameId, `${comment.username}: ${comment.comment}`)
+
+        setComment({username: '', comment: ''});
+
+    }
+
+    function chageHandler(e) {
+        setComment(state => ({
+            ...state,
+            [e.target.name]: e.target.value
+        }))
+    }
 
     return (
         <section id="game-details">
@@ -23,15 +45,15 @@ const Details = ({games}) => {
                     <h2>Comments:</h2>
                     <ul>
                         {/* list all comments for current game (If any) */}
-                        <li className="comment">
-                            <p>Content: I rate this one quite highly.</p>
-                        </li>
-                        <li className="comment">
-                            <p>Content: The best game.</p>
-                        </li>
+                        {game.comments?.map(x =>
+                            <li key={x} className="comment"><p>{x}</p></li>)
+                        }
                     </ul>
                     {/* Display paragraph: If there are no games in the database */}
-                    <p className="no-comment">No comments.</p>
+                    {!game.comments &&
+                        <p className="no-comment">No comments.</p>
+                    }
+
                 </div>
                 {/* Edit/Delete buttons ( Only for creator of this game )  */}
                 <div className="buttons">
@@ -43,9 +65,21 @@ const Details = ({games}) => {
             {/* Add Comment ( Only for logged-in users, which is not creators of the current game ) */}
             <article className="create-comment">
                 <label>Add new comment:</label>
-                <form className="form">
-                    <textarea name="comment" placeholder="Comment......" defaultValue={""} />
-                    <input className="btn submit" type="submit" defaultValue="Add Comment" />
+                <form className="form" onSubmit={submitHandler}>
+                    <input
+                        type="text"
+                        name="username"
+                        value={comment.username}
+                        onChange={chageHandler}
+                        placeholder="John Doe"
+                    />
+                    <textarea
+                        name="comment"
+                        value={comment.comment}
+                        onChange={chageHandler}
+                        placeholder="Comment......"
+                    />
+                    <input className="btn submit" type="submit" value="Add Comment" />
                 </form>
             </article>
         </section>
