@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const Details = ({ games, addComment }) => {
     const [comment, setComment] = useState({
         username: '',
         comment: ''
-    })
+    });
 
     const { gameId } = useParams();
 
@@ -17,15 +17,14 @@ const Details = ({ games, addComment }) => {
         addComment(gameId, `${comment.username}: ${comment.comment}`)
 
         setComment({username: '', comment: ''});
-
-    }
+    };
 
     function chageHandler(e) {
         setComment(state => ({
             ...state,
             [e.target.name]: e.target.value
         }))
-    }
+    };
 
     return (
         <section id="game-details">
@@ -57,7 +56,7 @@ const Details = ({ games, addComment }) => {
                 </div>
                 {/* Edit/Delete buttons ( Only for creator of this game )  */}
                 <div className="buttons">
-                    <a href="#" className="button">Edit</a>
+                    <Link to={`/edit/${gameId}`} className="button">Edit</Link>
                     <a href="#" className="button">Delete</a>
                 </div>
             </div>
