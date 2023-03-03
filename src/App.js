@@ -1,5 +1,5 @@
 import './App.css';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes , useNavigate } from 'react-router-dom';
 import uniqid from 'uniqid';
 import { useEffect, useState } from "react";
 import * as gameServices from "./services/gameService";
@@ -20,7 +20,9 @@ function App() {
       .then(result => {
         setGames(result)
       })
-  }, [])
+  }, []);
+
+  const navigate = useNavigate();
 
   const addComment = (gameId, comment) => {
     setGames(state => {
@@ -43,6 +45,7 @@ function App() {
         _id: uniqid() 
       } 
     ]))
+    navigate('/catalog')
   };
 
   return (
