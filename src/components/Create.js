@@ -1,7 +1,7 @@
 import { useState } from "react";
 import CatalogItem from "./CatalogItem";
 
-const Create = ({ setGames }) => {
+const Create = ({ addGameHandler }) => {
     const [values, setValues] = useState({
         title: '',
         category: '',
@@ -21,18 +21,16 @@ const Create = ({ setGames }) => {
     function submitHandler(e) {
         e.preventDefault();
 
-        setGames(state => [
-            ...state,
-            {
-                category: values.category,
-                imageUrl: values.imageUrl,
-                maxLevel: values.maxLevel,
-                summary: values.summary,
-                title: values.title
-            }
+        const data = {
+            category: values.category,
+            imageUrl: values.imageUrl,
+            maxLevel: values.maxLevel,
+            summary: values.summary,
+            title: values.title
+        };
 
-        ])
-    }
+        addGameHandler(data)
+    };
 
     return (
         <section id="create-page" className="auth" >
