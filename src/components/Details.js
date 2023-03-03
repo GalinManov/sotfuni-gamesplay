@@ -7,24 +7,64 @@ const Details = ({ games, addComment }) => {
         comment: ''
     });
 
+    const [errors, setErrors] = useState({
+        username: '',
+        comment: ''
+    });
+
     const { gameId } = useParams();
 
     const game = games.find(x => x._id == gameId);
 
     function submitHandler(e) {
-        e.preventDefault();
+        e.preventDefault(); 
 
-        addComment(gameId, `${comment.username}: ${comment.comment}`)
-
-        setComment({username: '', comment: ''});
+        if(errors.username.length > 0 || errors.comment.length > 0){
+            alert('Please correct all fields before proceeding!')
+        } else {
+            addComment(gameId, `${comment.username}: ${comment.comment}`)
+            setComment({ username: '', comment: '' })
+        };      
     };
 
-    function chageHandler(e) {
+    function changeHandler(e) {
         setComment(state => ({
             ...state,
             [e.target.name]: e.target.value
         }))
     };
+
+    function validateUsername(e) {
+        let errorMessage = '';
+        const usernameValid = e.target.value;
+
+        if (usernameValid.length < 4) {
+            errorMessage = 'Username must be at least 4 characters long!'
+        } else if (usernameValid.length > 10) {
+            errorMessage = 'Username must not be more than 10 characters long!'
+        };
+
+        setErrors(state => ({
+            ...state,
+            username: errorMessage
+        }));
+    };
+
+    function validateComment(e) {
+        let errorMessage = '';
+        const commentValid = e.target.value;
+
+        if (commentValid.length === 0) {
+            errorMessage = 'Please enter a comment'
+        } else if (commentValid.length > 100) {
+            errorMessage = 'Comment is too long!'
+        };
+
+        setErrors(state => ({
+            ...state,
+            comment: errorMessage
+        }));
+    }
 
     return (
         <section id="game-details">
@@ -69,15 +109,25 @@ const Details = ({ games, addComment }) => {
                         type="text"
                         name="username"
                         value={comment.username}
-                        onChange={chageHandler}
+                        onChange={changeHandler}
+                        onBlur={validateUsername}
                         placeholder="John Doe"
                     />
+                    {errors.username &&
+                        <div style={{ color: 'red' }}>{errors.username}</div>
+                    }
+
                     <textarea
                         name="comment"
                         value={comment.comment}
-                        onChange={chageHandler}
+                        onChange={changeHandler}
+                        onBlur={validateComment}
                         placeholder="Comment......"
                     />
+                    {errors.comment &&
+                        <div style={{ color: 'red' }}>{errors.comment}</div>
+                    }
+
                     <input className="btn submit" type="submit" value="Add Comment" />
                 </form>
             </article>
